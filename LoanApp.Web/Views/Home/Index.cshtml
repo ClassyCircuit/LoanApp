@@ -1,0 +1,53 @@
+﻿@model CalculatorModel
+@{
+    ViewData["Title"] = "Calculator";
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.Warning))
+{
+	<div class="alert alert-warning" role="alert">@Model.Warning</div>
+}
+
+<div class="text-center">
+    <h1 class="display-4">@Model.Loan.Name Calculator</h1>
+</div>
+
+<div>
+	<p>Interest rate: @FormattingHelper.GetFormattedPercentage(@Model.Loan.InterestRate)</p>
+</div>
+<form asp-controller="Home" asp-action="Index" method="post">
+	@*Loan select*@
+	<label for="loanSelect">Select Loan Type:</label>
+	<select class="form-select" asp-for="SelectedLoan" asp-items="@Model.LoanTypes"></select>
+	
+	@*Payback plan select*@
+	<label for="planSelect">Select Payback Plan:</label>
+	<select class="form-select" asp-for="SelectedPaybackPlan" asp-items="@Model.PaybackPlans"></select>
+	
+	<br />
+	<button type="submit">Update loan type</button>
+	<input type="hidden" asp-for="LoanAmount"/>
+	<input type="hidden" asp-for="PaybackTime"/>
+</form>
+<hr />
+<form asp-controller="Home" asp-action="Index" method="post">
+	@*Loan amount*@
+	<label for="amountRange" class="form-label">Loan Amount</label>
+	<input type="range" asp-for="LoanAmount" class="form-range" id="amountRange" min="@Model.Loan.MinLoanAmount" max="@Model.Loan.MaxLoanAmount" value="0" step="1000" oninput="this.form.amountInput.value=this.value"/>
+	<input type="number" id="amountInput" min="@Model.Loan.MinLoanAmount" max="@Model.Loan.MaxLoanAmount" value="0" onchange="this.form.amountRange.value=this.value"/>
+	
+	@*Payback time*@
+	<br />
+	<br />
+	<label for="paybackRange" class="form-label">Payback Time (years)</label>
+	<input type="range" asp-for="PaybackTime" class="form-range" id="paybackRange" min="@Model.Loan.MinPaybackTime" max="@Model.Loan.MaxPaybackTime" value="1" step="1" oninput="this.form.paybackInput.value=this.value"/>
+	<input type="number" id="paybackInput" min="@Model.Loan.MinPaybackTime" max="@Model.Loan.MaxPaybackTime" value="1" onchange="this.form.paybackRange.value=this.value"/>
+
+	<input type="hidden" asp-for="SelectedLoan"/>
+	<input type="hidden" asp-for="SelectedPaybackPlan"/>
+	<br />
+	<br />
+	<button type="submit">Calculate Payback Plan</button>
+</form>	
+
+<partial name="_PaybackPlan" model="@Model"/>

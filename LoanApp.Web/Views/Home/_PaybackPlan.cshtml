@@ -1,0 +1,28 @@
+﻿@model CalculatorModel
+
+@if(Model.PaybackSchedule != null)
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Payment</th>
+				<th>Principal</th>
+				<th>Interest</th>
+				<th>Balance</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var payment in Model.PaybackSchedule.Payments)
+			{
+				<tr>
+					<td>@payment.PaymentId</td>
+					<td>@payment.MonthlyPayment</td>
+					<td>@payment.Principal</td>
+					<td>@payment.Interest</td>
+					<td>@payment.UnpaidBalance</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
